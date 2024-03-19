@@ -1,0 +1,124 @@
+#pragma once
+#include<string>
+struct Node {
+	std::string data;
+	Node* next;
+	Node(std::string dat) {
+		this->data = dat;
+		this->next = nullptr;
+	}
+	Node() {
+		this->data = '0';
+		this->next = nullptr;
+	}
+};
+struct stack {
+	int n;
+	Node* head = new Node;
+	stack();
+	stack(std::string* arr, int n);
+	void add(std::string el);
+	std::string remove();
+	std::string show();
+	void print();
+	void clear();
+	~stack();
+
+};
+
+
+
+#include "Header.h"
+#include <iostream>
+#include<string>
+using namespace std;
+stack::stack() {
+	n = 0;
+	head->next = nullptr;
+}
+stack::stack(std::string* arr, int n) {
+	for (int i = 0; i < n; i++) {
+		add(arr[i]);
+	}
+}
+void stack::add(std::string el) {
+	Node* newDat = new Node(el);
+	newDat->next = head->next;
+	head->next = newDat;
+	head->data = newDat->data;
+	this->n++;
+}
+std::string stack::remove() {
+	std::string temp = head->data;
+	if (head->next != nullptr) {
+		Node* del = head->next;
+		if (del->next != nullptr) {
+			head->next = del->next;
+			head->data = del->next->data;
+		}
+		else {
+			head->next = nullptr;
+			head->data = '0';
+		}
+		delete del;
+	}
+	return temp;
+}
+void stack::print() {
+	Node* el = head->next;
+	while (el != nullptr) {
+		cout << el->data << ' ';
+		el = el->next;
+	}
+	cout << endl;
+}
+std::string stack::show() {
+	std::string elem ="0";
+	if (n != 0) elem = head->data;
+	return elem;
+}
+
+void stack::clear() {
+	while (head->next != nullptr) {
+		remove();
+	}
+}
+stack::~stack() {
+	clear();
+	delete head;
+}
+std::string toBinary(int num) {
+	if (num == 0) {
+		return "0"; 
+	}
+
+	std::string binary = ""; 
+
+	while (num > 0) {
+		int remainder = num % 2; 
+		binary = std::to_string(remainder) + binary; 
+		num /= 2;
+	}
+
+	return binary; 
+}
+
+
+#include "Header.h"
+#include <iostream>
+#include<string>
+using namespace std;
+int main() {
+	stack st;
+	int n=0;
+	string num;
+	while (n != 33) {
+		cin >> n;
+		if (n != 33) {
+			num = toBinary(n);
+			st.add(num);
+		}
+	}
+	st.print();
+}
+std::string toBinary(int num);
