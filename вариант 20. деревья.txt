@@ -1,0 +1,93 @@
+#pragma once
+struct Node {
+	char data;
+	Node* left;
+	Node* right;
+	Node(char value) : data(value), left(nullptr), right(nullptr) {}
+	
+};
+	void insert(Node* &root, char value);
+	
+	void print(Node* root, int level);
+	void inOrderTraversal(Node* root);
+	int countDigits(Node* root);
+
+
+#include "Header.h"
+#include<iostream>
+using namespace std;
+
+
+
+void insert(Node*& root, char value) {
+    if (root == nullptr) {
+        root = new Node(value);
+    }
+    else {
+        if (value < root->data) {
+            insert(root->left, value);
+        }
+        else if (value > root->data) {
+            insert(root->right, value);
+        }
+        // If value is equal to root->data, do nothing (we want unique values in the tree)
+    }
+}
+void print(Node* root, int level)
+{
+
+    if (root) {
+        print(root->left, level + 1);
+        for (int i = 0; i < level; i++) {
+            cout << "\t";
+        }
+
+        cout << root->data << endl;
+        print(root->right, level + 1);
+    }
+}
+void inOrderTraversal(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+    inOrderTraversal(root->left);
+    std::cout << root->data << " ";
+    inOrderTraversal(root->right);
+    
+}
+int countDigits(Node* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    int count = 0;
+    if (isdigit(root->data)) {
+        count = 1;
+    }
+    return count + countDigits(root->left) + countDigits(root->right);
+}
+
+
+#include "Header.h"
+#include<iostream>
+#include<set>
+#include<cctype>
+using namespace std;
+int main() {
+	Node* root = nullptr;
+	std::set<char>ch;
+	char n;
+	
+	while (cin>>n && n!= 'a') {
+		
+			ch.insert( n);
+		
+	}
+	for (char c : ch) {
+		insert(root, c);
+	}
+	
+	inOrderTraversal(root);
+	std::cout << endl;
+	std::cout << countDigits(root);
+}
+
