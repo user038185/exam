@@ -1,0 +1,162 @@
+#include<string>
+struct Node {
+    std::string data;
+    Node* next;
+};
+
+class Queue {
+private:
+    Node* front;
+    Node* rear;
+
+public:
+    Queue();
+    Queue(std::string* arr, int n);
+    ~Queue();
+    void add(std::string newEl);
+    void remove();
+    std::string show();
+    void print();
+    void clear();
+    
+
+    bool find(std::string w);
+
+    void plus(std::string w);
+
+    int count();
+
+};
+
+
+#include"Header.h"
+#include<iostream>
+using namespace std;
+Queue::Queue() {
+    front = rear = nullptr;
+}
+Queue::Queue(std::string* arr, int n) {
+    for (int i = 0; i < n; i++) {
+        add(arr[i]);
+    }
+}
+void Queue::clear() {
+    while (front != nullptr) {
+        remove();
+    }
+}
+Queue::~Queue() {
+    clear();
+    delete front;
+    delete rear;
+}
+void  Queue::add(std::string newEl) {
+    Node* newNode = new Node;
+    newNode->data = newEl;
+    newNode->next = nullptr;
+
+    if (rear == nullptr) {
+        front = rear = newNode;
+    }
+    else {
+        rear->next = newNode;
+        rear = newNode;
+        
+    }
+}
+
+void  Queue::remove() {
+
+    if (front == nullptr) {
+        return;
+    }
+    std::string temp = front->data;
+    if (front != nullptr) {
+        Node* eldel = front;
+        if (eldel->next != nullptr) {
+            front = eldel->next;
+        }
+        else {
+            front = nullptr;
+            rear = front;
+        }
+        delete eldel;
+
+    }
+
+}
+
+std::string  Queue::show() {
+    Node* temp = front;
+    return temp->data;
+    temp = temp->next;
+}
+void  Queue::print() {
+    if (front == nullptr) {
+        cout << " Очередь пуста. " << endl;
+        return;
+    }
+
+    Node* temp = front;
+    while (temp != nullptr) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+
+bool Queue::find(std::string w) {
+    Node* current = front;
+    bool f = false;
+    if (current == nullptr) {
+        return f;
+    }
+    else {
+        while (current != nullptr) {
+            if (current->data == w) {
+                f = true;
+            }
+            current = current->next;
+        }
+        return f;
+    }
+}
+
+void Queue::plus(std::string w) {
+    if (!(this->find(w))) {
+        this->add(w);
+    }
+}
+
+int Queue::count() {
+    Node* current = front;
+    int count = 0;
+    while (current != nullptr) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+
+#include <iostream>
+#include <fstream>
+#include "Header.h"
+#include <string>
+using namespace std;
+int main() {
+    setlocale(LC_ALL, "rus");
+    std::string word;
+    Queue q;
+    ifstream fin("queue2.txt");
+    if (fin.is_open()) {
+        while (fin >> word) {
+            q.plus(word);
+        }
+        fin.close();
+        cout << q.count() << endl;
+        q.print();
+    }
+
+}
