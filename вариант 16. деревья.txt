@@ -1,0 +1,107 @@
+#pragma once
+struct Node {
+	int data;
+	Node* left;
+	Node* right;
+};
+Node* createNode(int value);
+Node* insert(Node* root, int value);
+void print(Node* root, int level);
+void findMax(Node* root);
+
+
+#include "Header.h"
+#include<iostream>
+#include<queue>
+using namespace std;
+
+Node* createNode(int value)
+{
+    Node* newNode = new Node();
+    if (newNode == nullptr) {
+        return nullptr;
+    }
+    newNode->data = value;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int value)
+{
+    if (root == nullptr) {
+        root = createNode(value);
+        return root;
+    }
+    if (value < root->data) {
+        root->left = insert(root->left,value);
+    }
+    if (value >= root->data) {
+        root->right = insert(root->right,value);
+    }
+    return root;
+}
+
+void print(Node* root,int level)
+{
+    
+    if (root) {
+        print(root->left, level+1);
+        for (int i = 0; i < level; i++) {
+            cout << "\t";
+        }
+
+        cout << root->data << endl;
+        print(root->right, level+1);
+    }
+}
+
+void findMax(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+    std::queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        int n = q.size();
+        int maxForLevel = INT_MIN;
+
+        for (int i = 0; i < n; i++) {
+            Node* current = q.front();
+            q.pop();
+
+            // Находим максимальный элемент на уровне
+            if (current->data > maxForLevel) {
+                maxForLevel = current->data;
+            }
+
+            // Добавляем потомков в очередь, если они есть
+            if (current->left != nullptr) {
+                q.push(current->left);
+            }
+            if (current->right != nullptr) {
+                q.push(current->right);
+            }
+        }
+
+        std::cout << "Максимальный элемент на уровне: " << maxForLevel << std::endl;
+    }
+}
+#include "Header.h"
+#include<iostream>
+#include<queue>
+using namespace std;
+int main() {
+    setlocale(LC_ALL, "rus");
+	Node* root = nullptr;
+    int n;
+    cin >> n;
+    int* arr = new int[n];
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+        root = insert(root, arr[i]);
+    }
+    print(root, 0);
+    findMax(root);
+}
