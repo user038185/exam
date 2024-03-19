@@ -1,0 +1,151 @@
+#pragma once
+struct Node {
+    int data;
+    Node* next;
+};
+
+class Queue {
+private:
+    Node* front;
+    Node* rear;
+
+public:
+    Queue();
+    Queue(int* arr, int n);
+    ~Queue();
+    int add(int newEl);
+    void remove();
+    int show();
+    void print();
+    void clear();
+    void magic();
+    
+};
+
+
+#include"Header.h"
+#include<iostream>
+using namespace std;
+Queue::Queue() {
+    front = rear = nullptr;
+}
+Queue::Queue(int* arr, int n) {
+    for (int i = 0; i < n; i++) {
+        add(arr[i]);
+    }
+}
+void Queue::clear() {
+    while (front != nullptr) {
+        remove();
+    }
+}
+Queue::~Queue() {
+    clear();
+    delete front;
+    delete rear;
+}
+int  Queue::add(int newEl) {
+    Node* newNode = new Node;
+    newNode->data = newEl;
+    newNode->next = nullptr;
+
+    if (rear == nullptr) {
+        front = rear = newNode;
+    }
+    else {
+        rear->next = newNode;
+        rear = newNode;
+        return rear->data;
+    }
+}
+
+void  Queue::remove() {
+
+    if (front == nullptr) {
+        return;
+    }
+    int temp = front->data;
+    if (front != nullptr) {
+        Node* eldel = front;
+        if (eldel->next != nullptr) {
+            front = eldel->next;
+        }
+        else {
+            front = nullptr;
+            rear = front;
+        }
+        delete eldel;
+
+    }
+
+}
+
+int  Queue::show() {
+    Node* temp = front;
+    return temp->data;
+    temp = temp->next;
+}
+void  Queue::print() {
+    if (front == nullptr) {
+        cout << " Очередь пуста. " << endl;
+        return;
+    }
+
+    Node* temp = front;
+    while (temp != nullptr) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+
+void Queue::magic() {
+    Queue q1;
+    Queue q2;
+    Node* current = front;
+    while (current != nullptr) {
+        if (current->data >= 0) {
+            q1.add(current->data);
+        }
+        else if(current->data < 0){
+            q2.add(current->data);
+        }
+        current = current->next;
+    }
+    
+    this->clear();
+    Node* temp = q1.front;
+    while (temp != nullptr) {
+        this->add(temp->data);
+        temp = temp->next;
+    }
+    Node* temp1 = q2.front;
+    while (temp1 != nullptr) {
+        this->add(temp1->data);
+        temp1 = temp1->next;
+    }
+}
+   
+
+
+#include <iostream>
+#include <fstream>
+#include "Header.h"
+using namespace std;
+int main() {
+    setlocale(LC_ALL, "rus");
+    int el;
+    Queue q;
+    ifstream fin("queue1.txt");
+    if (fin.is_open()) {
+        while (fin >> el) {
+            q.add(el);
+        }
+        fin.close();
+        q.magic();
+        
+        q.print();
+    }
+
+}
